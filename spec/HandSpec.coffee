@@ -4,6 +4,7 @@ describe 'hand', ->
   hitSpy = null
   checkScoreSpy = null
   playerEndSpy = null
+  gameEndSpy = null
   card0 = null
   card1 = null
   card2 = null
@@ -24,6 +25,7 @@ describe 'hand', ->
     hitSpy = sinon.spy(Hand.prototype, 'hit')
     checkScoreSpy = sinon.spy(Hand.prototype, 'checkScore')
     playerEndSpy = sinon.spy(Hand.prototype, 'playerEnd')
+    gameEndSpy = sinon.spy(Hand.prototype, 'gameEnd')
 
     card0 = new Card({value: 0, suit: 0, rank: 0})
     card1 = new Card({value: 1, suit: 0, rank: 1})
@@ -43,6 +45,7 @@ describe 'hand', ->
     Hand.prototype.hit.restore()
     Hand.prototype.checkScore.restore()
     Hand.prototype.playerEnd.restore()
+    Hand.prototype.gameEnd.restore()
 
   describe 'hit', ->
     it 'should check the score', =>
@@ -77,9 +80,22 @@ describe 'hand', ->
       assert.strictEqual(hand.hasAce(), false)
       return
 
+  describe 'player', ->
+    it 'should add a new card to players hand if they hit', =>
+      hand = new Hand([card10, card6], deck, false)
+      hand.hit()
+      expect(hand.length).to.equal(3)
+      return
+    it 'should end the game if the player\'s hand value is over 21', =>
+      hand = new Hand([card10, card9, card2], deck, false)
+      hand.hit()
+      expect(gameEndSpy).to.have.been.called
+      return
+    
+
   describe 'dealer', ->
     it 'should hit if score is less than 17', =>
-      hand = new Hand([card1, card2], deck, true)
+      hand = new Hand([card10, card6], deck, true)
       hand.checkScore()
       expect(hitSpy).to.have.been.called
       return
@@ -93,6 +109,22 @@ describe 'hand', ->
       hand.checkScore()
       expect(hitSpy).to.not.have.been.called
       return
+    it 'should not hit if dealer has 17 with no aces', =>
+      hand = new Hand([card10, card7], deck, true)
+      hand.checkScore()
+      expect(hitSpy).to.not.have.been.called
+      return
+    it 'should end the game if dealer score is over 21', =>
+      hand = new Hand([card10, card7, card5], deck, true)
+      hand.checkScore()
+      expect(gameEndSpy).to.have.been.called
+      return
+    it 'should represent the correct value if card is flipped', =>      
+      hand = new Hand([card10.flip(), card7], deck, true)
+      expect(hand.scores()[0]).to.equal(7)
+      hand.first().flip()
+      expect(hand.scores()[0]).to.equal(17)
+
 
 
 
