@@ -9,8 +9,13 @@
     <script src="lib/backbone.js"></script>
     <script src="lib/mocha/mocha.js"></script>
     <script src="lib/chai/chai.js"></script>
+    <script src="lib/sinon/sinon.js"></script>
+    <script src="lib/sinon/sinon-chai.js"></script>
     <script>
       mocha.setup('bdd');
+      assert = chai.assert
+      expect = chai.expect
+      should = chai.should
       $(function() {
         window.mochaPhantomJS ? mochaPhantomJS.run() : mocha.run();
       })
@@ -29,6 +34,7 @@
     <!-- include spec files here... -->
     <script src="compiled/spec/CardSpec.js"></script>
     <script src="compiled/spec/DeckSpec.js"></script>
+    <script src="compiled/spec/HandSpec.js"></script>
     <script src="compiled/spec/BlackjackViewSpec.js"></script>
 
     <!-- // <script src="compiled/spec/main.js"></script> -->
