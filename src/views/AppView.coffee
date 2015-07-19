@@ -35,7 +35,8 @@ class window.AppView extends Backbone.View
       else if @model.get('dealerHand').finalScore() > @model.get('playerHand').finalScore()
         @playerLoses()
       else
-        console.log 'tie'
+        $('#log .log__message').text('Tie game!')
+        $('#log').addClass('is-visible')
 
     @render()
 
@@ -49,10 +50,12 @@ class window.AppView extends Backbone.View
     console.log 'game is over'
 
   playerWins: ->
-    console.log 'player wins'
+    $('#log .log__message').text('You win!')
+    $('#log').addClass('is-visible')
 
   playerLoses: ->
-    console.log 'player loses'
+    $('#log .log__message').text('You lose!')
+    $('#log').addClass('is-visible')
   
   disableButtons: ->
     # disable buttons
