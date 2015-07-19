@@ -2,8 +2,9 @@ describe 'hand', ->
   deck = null
   hand = null
   hitSpy = null
+  standSpy = null
+  bustSpy = null
   checkScoreSpy = null
-  playerEndSpy = null
   gameEndSpy = null
   card0 = null
   card1 = null
@@ -23,8 +24,9 @@ describe 'hand', ->
     deck = new Deck()
 
     hitSpy = sinon.spy(Hand.prototype, 'hit')
+    standSpy = sinon.spy(Hand.prototype, 'stand')
+    bustSpy = sinon.spy(Hand.prototype, 'bust')
     checkScoreSpy = sinon.spy(Hand.prototype, 'checkScore')
-    playerEndSpy = sinon.spy(Hand.prototype, 'playerEnd')
     gameEndSpy = sinon.spy(Hand.prototype, 'gameEnd')
 
     card0 = new Card({value: 0, suit: 0, rank: 0})
@@ -43,8 +45,9 @@ describe 'hand', ->
 
   afterEach ->
     Hand.prototype.hit.restore()
+    Hand.prototype.stand.restore()
+    Hand.prototype.bust.restore()
     Hand.prototype.checkScore.restore()
-    Hand.prototype.playerEnd.restore()
     Hand.prototype.gameEnd.restore()
 
   describe 'hit', ->
@@ -66,7 +69,7 @@ describe 'hand', ->
     it 'should end the players turn if they stand', =>
       hand = new Hand()
       hand.stand()
-      expect(playerEndSpy).to.have.been.called;
+      expect(standSpy).to.have.been.called;
       return
       
 
@@ -89,7 +92,7 @@ describe 'hand', ->
     it 'should end the game if the player\'s hand value is over 21', =>
       hand = new Hand([card10, card9, card2], deck, false)
       hand.hit()
-      expect(gameEndSpy).to.have.been.called
+      expect(bustSpy).to.have.been.called
       return
     
 
@@ -99,10 +102,15 @@ describe 'hand', ->
       hand.checkScore()
       expect(hitSpy).to.have.been.called
       return
-    it 'should hit if dealer has ace and score is 17', =>
+    it 'should hit if dealer has ace and score is a soft 17', =>
       hand = new Hand([card1, card6], deck, true)
       hand.checkScore()
       expect(hitSpy).to.have.been.called
+      return
+    it 'should not hit if dealer has ace and score is a hard 17', =>
+      hand = new Hand([card6, card10, card1], deck, true)
+      hand.checkScore()
+      expect(hitSpy).to.not.have.been.called
       return
     it 'should not hit if dealer has ace and score is higher than 17', =>
       hand = new Hand([card1, card7], deck, true)
@@ -113,6 +121,12 @@ describe 'hand', ->
       hand = new Hand([card10, card7], deck, true)
       hand.checkScore()
       expect(hitSpy).to.not.have.been.called
+      return
+    it 'dealer should not hit if score is over 17', =>
+      hand = new Hand([card10, card8], deck, true)
+      hand.checkScore()
+      expect(hitSpy).to.not.have.been.called
+      expect(gameEndSpy).to.have.been.called
       return
     it 'should end the game if dealer score is over 21', =>
       hand = new Hand([card10, card7, card5], deck, true)
@@ -125,8 +139,15 @@ describe 'hand', ->
       hand.first().flip()
       expect(hand.scores()[0]).to.equal(17)
 
-
-
-
+  describe 'final score', ->
+    it 'should give the min score if max > 21', =>
+      hand = new Hand([card1, card10, card11], deck)
+      expect(hand.finalScore()).to.equal(21)
+    it 'should return min score if no ace and over 21', =>
+      hand = new Hand([card10, card11, card2], deck)
+      expect(hand.finalScore()).to.equal(22)
+    it 'should return 21 if has ace and score is 21', =>
+      hand = new Hand([card1, card11], deck)
+      expect(hand.finalScore()).to.equal(21)
 
 
