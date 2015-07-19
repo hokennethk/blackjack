@@ -1,22 +1,30 @@
 <html>
-  <head>
-    <title>Blackjack</title>
-    <link href="styles/app.css" rel="stylesheet" type="text/css" media="screen">
-  </head>
-  <body>
-    <script src="lib/jquery.js"></script>
-    <script src="lib/underscore.js"></script>
-    <script src="lib/backbone.js"></script>
+<head>
+  <title>Blackjack</title>
+  <link rel="stylesheet" type="text/css" href="styles/normalize.css">
+  <link rel="stylesheet" type="text/css" href="styles/app.css">
+</head>
+<body>
 
-    <script src="compiled/src/models/Card.js"></script>
-    <script src="compiled/src/collections/Hand.js"></script>
-    <script src="compiled/src/collections/Deck.js"></script>
-    <script src="compiled/src/models/App.js"></script>
+<header class="header">
+  <h1 class="header__title">Coffee Jack!</h1>
+</header>
 
-    <script src="compiled/src/views/CardView.js"></script>
-    <script src="compiled/src/views/HandView.js"></script>
-    <script src="compiled/src/views/AppView.js"></script>
+<div id="game" class="game"></div>
 
-    <script src="compiled/src/main.js"></script>
-  </body>
+<script src="lib/jquery.js"></script>
+<script src="lib/underscore.js"></script>
+<script src="lib/backbone.js"></script>
+
+<script src="compiled/src/models/Card.js"></script>
+<script src="compiled/src/collections/Hand.js"></script>
+<script src="compiled/src/collections/Deck.js"></script>
+<script src="compiled/src/models/App.js"></script>
+
+<script src="compiled/src/views/CardView.js"></script>
+<script src="compiled/src/views/HandView.js"></script>
+<script src="compiled/src/views/AppView.js"></script>
+
+<script src="compiled/src/main.js"></script>
+</body>
 </html>

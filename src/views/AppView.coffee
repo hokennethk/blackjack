@@ -1,8 +1,16 @@
 class window.AppView extends Backbone.View
+
+  el: '#game',
+
   template: _.template '
-    <button class="hit-button">Hit</button> <button class="stand-button">Stand</button>
-    <div class="player-hand-container"></div>
-    <div class="dealer-hand-container"></div>
+    <div class="game__content">
+    <div class="game__buttons">
+    <button class="hit-button">Hit</button>
+    <button class="stand-button">Stand</button>
+    </div>
+    <div class="hand-container player-hand-container"></div>
+    <div class="hand-container dealer-hand-container"></div>
+    </div>
   '
 
   events:
@@ -11,27 +19,23 @@ class window.AppView extends Backbone.View
 
   initialize: ->
     # Calls when a player stands on a valid hand
-    @model.get('playerHand').on 'playerEnd', => 
+    @model.get('playerHand').on 'stand', => 
       @disableButtons()
 
     # Always happens when player goes over 21
-    @model.get('playerHand').on 'gameEnd', =>
+    @model.get('playerHand').on 'bust', =>
       @disableButtons()
-      alert('you lose')
+      @playerLoses()
 
     @model.get('dealerHand').on 'gameEnd', =>
       if @model.get('dealerHand').finalScore() > 21
-        alert('you win!')
+        @playerWins()
       else if @model.get('dealerHand').finalScore() < @model.get('playerHand').finalScore()
-        alert('you win!')
+        @playerWins()
       else if @model.get('dealerHand').finalScore() > @model.get('playerHand').finalScore()
-        alert('you lose')
+        @playerLoses()
       else
-        alert('tie')
-      
-      # if @model.get('playerHand').finalScore() > @model.get('dealerHand').finalScore()
-      #   alert('you win!')
-      # else if @model.get('playerHand').finalScore() < @model.get('dealerHand').finalScore()
+        console.log 'tie'
 
     @render()
 
@@ -41,6 +45,15 @@ class window.AppView extends Backbone.View
     @$('.player-hand-container').html new HandView(collection: @model.get 'playerHand').el
     @$('.dealer-hand-container').html new HandView(collection: @model.get 'dealerHand').el
 
+  gameOver: ->
+    console.log 'game is over'
+
+  playerWins: ->
+    console.log 'player wins'
+
+  playerLoses: ->
+    console.log 'player loses'
+  
   disableButtons: ->
     # disable buttons
     @$el.find('.hit-button').attr 'disabled', true

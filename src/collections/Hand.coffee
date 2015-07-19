@@ -11,7 +11,10 @@ class window.Hand extends Backbone.Collection
     @last()
 
   stand: ->
-    @playerEnd()
+    @trigger 'stand', @
+
+  bust: ->
+    @trigger 'bust', @
 
   # if hand has an ace, returns 1. if not, returns 0
   hasAce: -> @reduce (memo, card) ->
@@ -33,15 +36,18 @@ class window.Hand extends Backbone.Collection
   checkScore: ->
     # Check if dealer
     if @isDealer
-      if @minScore() < 17
+      if @finalScore() < 17
         # Dealer always plays if min score less than 17
         @hit()
+      else if @scores()[1] == 17 and @hasAce()
+        # this is a soft 17. Dealer must hit
+        @hit()
       else
-        # Otherwise, dealer doesn't play and the game is ended
+        # score hard 17 or greater
         @gameEnd()
     else
       # If users min score is > 21, end the game
-      if @minScore() > 21 then @gameEnd()
+      if @minScore() > 21 then @bust()
 
   finalScore: ->
     finalScore = if @scores()[1] < 22
@@ -49,12 +55,6 @@ class window.Hand extends Backbone.Collection
     else
       @scores()[0]
     finalScore
-
-  playerEnd: ->
-    @trigger 'playerEnd', @
-
-  bust: ->
-    @trigger 'bust', @
 
   gameEnd: ->
     @trigger 'gameEnd', @

@@ -2,7 +2,7 @@ class window.HandView extends Backbone.View
   className: 'hand'
 
   template: _.template '
-    <h2>
+    <h2 class="hand-container__heading">
     <% if(isDealer){
       %>Dealer<%
     }else{

@@ -6,8 +6,8 @@ class window.App extends Backbone.Model
     @set 'playerHand', deck.dealPlayer()
     @set 'dealerHand', deck.dealDealer()
 
-    @get('playerHand').on 'gameEnd', => @playerBust()
-    @get('playerHand').on 'playerEnd', => @dealerStart()
+    @get('playerHand').on 'bust', => @playerBust()
+    @get('playerHand').on 'stand', => @dealerStart()
 
   playerBust: ->
     @get('dealerHand').first().flip()
