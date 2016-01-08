@@ -3,6 +3,11 @@ class window.AppView extends Backbone.View
   el: '#game',
 
   template: _.template '
+
+    <div id="log" class="log">
+      <div class="log__message"></div>
+    </div>
+
     <div class="game__content">
     <div class="game__buttons">
     <button class="hit-button">Hit</button>
@@ -16,6 +21,11 @@ class window.AppView extends Backbone.View
   events:
     'click .hit-button': -> @model.get('playerHand').hit()
     'click .stand-button': -> @model.get('playerHand').stand()
+    'click .log': ->
+      @model.newGame()
+      @initialize()
+      @render()
+
 
   initialize: ->
     # Calls when a player stands on a valid hand
@@ -61,3 +71,8 @@ class window.AppView extends Backbone.View
     # disable buttons
     @$el.find('.hit-button').attr 'disabled', true
     @$el.find('.stand-button').attr 'disabled', true
+
+  enableButtons: ->
+    # disable buttons
+    @$el.find('.hit-button').attr 'disabled', false
+    @$el.find('.stand-button').attr 'disabled', false

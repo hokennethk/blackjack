@@ -1,5 +1,3 @@
-# TODO: Refactor this model to use an internal Game Model instead
-# of containing the game logic directly.
 class window.App extends Backbone.Model
   initialize: ->
     @set 'deck', deck = new Deck()
@@ -15,3 +13,14 @@ class window.App extends Backbone.Model
   dealerStart: ->
     @get('dealerHand').first().flip()
     @get('dealerHand').checkScore()
+
+  newGame: ->
+    # use new deck if cards get low
+    if @get('deck').length < 26
+      @set 'deck', deck = new Deck()
+
+    @set 'playerHand', @get('deck').dealPlayer()
+    @set 'dealerHand', @get('deck').dealDealer()
+
+    @get('playerHand').on 'bust', => @playerBust()
+    @get('playerHand').on 'stand', => @dealerStart()
